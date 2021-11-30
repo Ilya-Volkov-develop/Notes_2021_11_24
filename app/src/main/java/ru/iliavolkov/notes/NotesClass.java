@@ -1,12 +1,12 @@
 package ru.iliavolkov.notes;
 
-public class Notes {
+public class NotesClass {
 
     private String title;
     private String description;
     private String date;
 
-    public Notes(String title, String description, String date) {
+    public NotesClass(String title, String description, String date) {
         this.title = title;
         this.description = description;
         this.date = date;
@@ -17,23 +17,12 @@ public class Notes {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public String getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
 }
