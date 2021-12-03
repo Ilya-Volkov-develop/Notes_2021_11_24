@@ -2,4 +2,6 @@
     <string name="app_name">Заметки</string>
     <string name="fab_content_desc">Новая записка</string>
     <string name="title">Название</string>
+    <string name="description">Описание</string>
+    <string name="about">О приложении</string>
 </resources>

@@ -41,6 +41,7 @@
             android:layout_height="match_parent"
             android:layout_marginHorizontal="15dp"
             android:background="@null"
+            android:hint="@string/description"
             android:inputType="textCapSentences|textMultiLine" />
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
