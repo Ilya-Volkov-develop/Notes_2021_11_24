@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
@@ -17,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,9 +25,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import ru.iliavolkov.notes.Fragments.AboutFragment;
-import ru.iliavolkov.notes.Fragments.NotesFragmentListView;
-import ru.iliavolkov.notes.Fragments.ShowFragNote;
+import ru.iliavolkov.notes.ui.AboutFragment;
+import ru.iliavolkov.notes.ui.NotesFragmentListView;
+import ru.iliavolkov.notes.ui.ShowFragNote;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,10 +48,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         initToolbar();
+        addFragment(new NotesFragmentListView());
         loadIconAndName();
         initAndPressFloatingBtn();
-        getFragmentNotes();
     }
+
+    private void addFragment(Fragment notesFragmentListView) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_container, notesFragmentListView)
+                .commit();
+    }
+
 
     //Инициализачия toolbar
     private void initToolbar() {
@@ -135,13 +143,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getFragmentNotes() {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, new NotesFragmentListView())
-                .commit();
-    }
-
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         if(resultCode == RESULT_OK){
@@ -151,13 +152,13 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(selectedImage).into(icon);
         }
     }
-
-    @Override
-    protected void onStop() {
-        floatingBtn.setVisibility(View.VISIBLE);
-        super.onStop();
-    }
-
+//
+//    @Override
+//    protected void onStop() {
+//        floatingBtn.setVisibility(View.VISIBLE);
+//        super.onStop();
+//    }
+//
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -175,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(event);
     }
-
+//
     @Override
     public void onBackPressed() {
         if (!Utils.isLandscape(getResources()) && activityStr.equals("list")) {
