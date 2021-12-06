@@ -16,6 +16,7 @@ public class AboutFragment extends Fragment {
         return inflater.inflate(R.layout.about_fragment, container, false);
     }
 
+
     @Override
     public void onStop() {
         MainActivity.activityStr = "list";
