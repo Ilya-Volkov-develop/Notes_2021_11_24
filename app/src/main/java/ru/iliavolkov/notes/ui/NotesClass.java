@@ -1,4 +1,4 @@
-package ru.iliavolkov.notes;
+package ru.iliavolkov.notes.ui;
 
 public class NotesClass {
 

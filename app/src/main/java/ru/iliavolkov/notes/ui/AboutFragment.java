@@ -1,4 +1,4 @@
-package ru.iliavolkov.notes.Fragments;
+package ru.iliavolkov.notes.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -20,6 +20,7 @@ public class AboutFragment extends Fragment {
     @Override
     public void onStop() {
         MainActivity.activityStr = "list";
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
         super.onStop();
     }
 }
