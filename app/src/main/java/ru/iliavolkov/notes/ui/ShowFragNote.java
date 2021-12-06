@@ -1,4 +1,4 @@
-package ru.iliavolkov.notes.Fragments;
+package ru.iliavolkov.notes.ui;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import ru.iliavolkov.notes.MainActivity;
-import ru.iliavolkov.notes.NotesClass;
 import ru.iliavolkov.notes.R;
 import ru.iliavolkov.notes.Utils;
 
@@ -154,13 +153,13 @@ public class ShowFragNote extends Fragment {
 //        descriptionText.setText(null);
     }
 
-
     @Override
     public void onStop() {
         if (!Utils.isLandscape(getResources())){
             MainActivity.activityStr = "list";
         }
         saveNote();
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
         super.onStop();
     }
 }

@@ -1,4 +1,4 @@
-package ru.iliavolkov.notes.Fragments;
+package ru.iliavolkov.notes.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
