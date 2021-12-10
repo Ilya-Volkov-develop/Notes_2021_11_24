@@ -29,38 +29,23 @@ import java.util.Date;
 import ru.iliavolkov.notes.MainActivity;
 import ru.iliavolkov.notes.R;
 import ru.iliavolkov.notes.Utils;
+import ru.iliavolkov.notes.data.NotesData;
 
 public class ShowFragNote extends Fragment {
 
-    public static final String ARG_INDEX = "index";
-    public static final String ARG_TITLE = "title";
-    public static final String ARG_DESCRIPTION = "description";
-    private int indexGet;
-    private String titleGet;
-    private String descriptionGet;
-    private EditText titleText;
-    private EditText descriptionText;
+    private int indexGet = 0;
+    private String titleGet = null;
+    private String descriptionGet = null;
 
     public ShowFragNote() {}
 
-    public static ShowFragNote newInstance(NotesClass note, int index) {
-        ShowFragNote fragment = new ShowFragNote();
-        Bundle args = new Bundle();
-        args.putInt(ARG_INDEX, index);
-        args.putString(ARG_TITLE, note.getTitle());
-        args.putString(ARG_DESCRIPTION, note.getDescription());
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            indexGet = getArguments().getInt(ARG_INDEX);
-            titleGet = getArguments().getString(ARG_TITLE);
-            descriptionGet = getArguments().getString(ARG_DESCRIPTION);
-        }
+        saveNote();
+        titleGet = Utils.title;
+        descriptionGet = Utils.description;
+        indexGet = Utils.index;
     }
 
     @Override
@@ -70,8 +55,8 @@ public class ShowFragNote extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        titleText = view.findViewById(R.id.title);
-        descriptionText = view.findViewById(R.id.description);
+        EditText titleText = view.findViewById(R.id.title);
+        EditText descriptionText = view.findViewById(R.id.description);
         titleText.addTextChangedListener(new TextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (count > 0 && Math.abs(count - before) == 1) {
@@ -97,6 +82,38 @@ public class ShowFragNote extends Fragment {
         MainActivity.pressButtonKey = false;
     }
 
+    //    public static final String ARG_INDEX = "index";
+//    public static final String ARG_TITLE = "title";
+//    public static final String ARG_DESCRIPTION = "description";
+
+
+//
+//    public ShowFragNote() {}
+//
+//    public static ShowFragNote newInstance(NotesClass note, int index) {
+//        ShowFragNote fragment = new ShowFragNote();
+//        Bundle args = new Bundle();
+//        args.putInt(ARG_INDEX, index);
+//        args.putString(ARG_TITLE, note.getTitle());
+//        args.putString(ARG_DESCRIPTION, note.getDescription());
+//        fragment.setArguments(args);
+//        return fragment;
+//    }
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getArguments() != null) {
+//            saveNote();
+//            indexGet = getArguments().getInt(ARG_INDEX);
+//            titleGet = getArguments().getString(ARG_TITLE);
+//            descriptionGet = getArguments().getString(ARG_DESCRIPTION);
+//        }
+//    }
+//
+
+
+//
     private void saveNote() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
@@ -108,51 +125,49 @@ public class ShowFragNote extends Fragment {
         Date current = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("dd MMM");
         String message = formatter.format(current);
+        if (title != null || description != null) {
+            NotesData notes = new NotesData(title.getText().toString(), description.getText().toString(), message);
 
-        NotesClass notes = new NotesClass(title.getText().toString(), description.getText().toString(), message);
+            String json = prefs.getString("arrNotes", null);
+            Type type = new TypeToken<ArrayList<NotesData>>() {
+            }.getType();
 
-        String json = prefs.getString("arrNotes", null);
-        Type type = new TypeToken<ArrayList<NotesClass>>() {}.getType();
+            ArrayList<NotesData> arrNotes;
+            if (json == null) arrNotes = new ArrayList<>();
+            else arrNotes = gson.fromJson(json, type);
 
-        ArrayList<NotesClass> arrNotes;
-        if (json == null) arrNotes = new ArrayList<>();
-        else arrNotes = gson.fromJson(json, type);
-
-        if (MainActivity.floatingBtnBool){
-            if (!title.getText().toString().equals("") || !description.getText().toString().equals(""))
-                arrNotes.add(0,notes);
-            MainActivity.floatingBtnBool = false;
-        } else if (MainActivity.pressButtonKey) {
-            if (title.getText().toString().replace(" ","").equals("") && description.getText().toString().replace(" ","").equals(""))
-                arrNotes.remove(indexGet);
-            else { //if (!titleGet.equals("") || !descriptionGet.equals(""))
-                arrNotes.remove(indexGet);
-                arrNotes.add(0,notes);
-            }
-            try {
-                if (Utils.isLandscape(getResources())) {
-                    NotesFragmentListView notesFragmentListView = new NotesFragmentListView();
-                    FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragment_container, notesFragmentListView);
-                    transaction.commit();
+            if (MainActivity.floatingBtnBool) {
+                if (!title.getText().toString().equals("") || !description.getText().toString().equals(""))
+                    arrNotes.add(0, notes);
+            } else if (MainActivity.pressButtonKey) {
+                if (title.getText().toString().replace(" ", "").equals("") && description.getText().toString().replace(" ", "").equals(""))
+                    arrNotes.remove(indexGet);
+                else { //if (!titleGet.equals("") || !descriptionGet.equals(""))
+                    arrNotes.remove(indexGet);
+                    arrNotes.add(0, notes);
                 }
-            } catch (RuntimeException e) {e.printStackTrace();}
+                try {
+                    if (Utils.isLandscape(getResources())) {
+                        NotesFragmentListView notesFragmentListView = new NotesFragmentListView();
+                        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragment_container, notesFragmentListView);
+                        transaction.commit();
+                    }
+                } catch (RuntimeException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            MainActivity.pressButtonKey = false;
+            json = gson.toJson(arrNotes);
+            editor.putString("arrNotes", json);
+            editor.apply();
+            title.setText(null);
+            description.setText(null);
         }
-
-        MainActivity.pressButtonKey = false;
-        json = gson.toJson(arrNotes);
-        editor.putString("arrNotes", json);
-        editor.apply();
-//        Utils.title = null;
-//        Utils.description = null;
-//        titleGet = null;
-//        descriptionGet = null;
-//        indexGet = 0;
-//        titleText.setText(null);
-//        descriptionText.setText(null);
     }
-
+//
     @Override
     public void onStop() {
         if (!Utils.isLandscape(getResources())){

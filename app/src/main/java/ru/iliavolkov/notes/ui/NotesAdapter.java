@@ -11,14 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ru.iliavolkov.notes.R;
+import ru.iliavolkov.notes.data.NotesData;
 
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
-    private ArrayList<NotesClass> notes;
+    private ArrayList<NotesData> notes;
     private OnItemClickListener itemClickListener;
     private OnItemLongClickListener itemLongClickListener;
 
-    public NotesAdapter(ArrayList<NotesClass> notes) {
+    public NotesAdapter(ArrayList<NotesData> notes) {
         this.notes = notes;
     }
 

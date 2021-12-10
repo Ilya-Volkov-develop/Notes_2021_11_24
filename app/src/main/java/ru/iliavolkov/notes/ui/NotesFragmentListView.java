@@ -16,9 +16,6 @@ import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,10 +25,11 @@ import java.util.ArrayList;
 import ru.iliavolkov.notes.MainActivity;
 import ru.iliavolkov.notes.R;
 import ru.iliavolkov.notes.Utils;
+import ru.iliavolkov.notes.data.NotesData;
 
 public class NotesFragmentListView extends Fragment  {
 
-    private ArrayList<NotesClass> arrNotes;
+    private ArrayList<NotesData> arrNotes;
     private View view;
     private RecyclerView recyclerView;
 
@@ -43,7 +41,7 @@ public class NotesFragmentListView extends Fragment  {
         return view;
     }
 
-    private void initRecycleView(RecyclerView recyclerView, ArrayList<NotesClass> notes) {
+    private void initRecycleView(RecyclerView recyclerView, ArrayList<NotesData> notes) {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -81,74 +79,39 @@ public class NotesFragmentListView extends Fragment  {
         });
     }
 
-    private ArrayList<NotesClass> getArrNotes() {
+    private ArrayList<NotesData> getArrNotes() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String json = prefs.getString("arrNotes", null);
         if (json != null) {
-            Type type = new TypeToken<ArrayList<NotesClass>>() {}.getType();
+            Type type = new TypeToken<ArrayList<NotesData>>() {}.getType();
             return new Gson().fromJson(json, type);
         } else return new ArrayList<>();
     }
 
-//    private void listItemOnClick(NotesClass note, int index) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!Utils.isLandscape(getResources())) {
 
-//    }
+            MainActivity.floatingBtn.setVisibility(View.VISIBLE);
+            Utils.portable = true;
+        }
+        if (Utils.isLandscape(getResources())) MainActivity.floatingBtn.setVisibility(View.GONE);
+        if (Utils.isLandscape(getResources()) && Utils.portable && arrNotes != null) {
+            Utils.portable = false;
+            try {
+                setFragment(arrNotes.get(0),0,R.id.main_fragment_container_note);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+            }
+        }
+    }
 
-//    @Override
-//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-//        initList(view);
-//
-//        if (!Utils.isLandscape(getResources())) {
-//
-//            MainActivity.floatingBtn.setVisibility(View.VISIBLE);
-//            Utils.portable = true;
-//        }
-//        if (Utils.isLandscape(getResources())) MainActivity.floatingBtn.setVisibility(View.GONE);
-//        if (Utils.isLandscape(getResources()) && Utils.portable && arrNotes != null) {
-//            Utils.portable = false;
-//            try {
-//                setFragment(arrNotes.get(0),0,R.id.main_fragment_container_note);
-//            }catch (IndexOutOfBoundsException e){
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-//
-//    private void initList(View view) {
-//        LinearLayout layoutView = (LinearLayout) view;
-//        arrNotes = getArrNotes();
-//        int index = 0;
-//        if (arrNotes != null) {
-//            for (NotesClass notes: arrNotes) {
-//                final int indexFinal = index;
-//                addViewInLinerLayoutList(notes,layoutView,indexFinal);
-//                index++;
-//            }
-//        }
-//    }
-//
-//
-//    private void addViewInLinerLayoutList(NotesClass note, LinearLayout layoutView, int index) {
-//        LayoutInflater inflater = LayoutInflater.from(getContext());
-//        View layout_list = inflater.inflate(R.layout.note_item, null);
-//        TextView title = layout_list.findViewById(R.id.titleList);
-//        TextView titleDate = layout_list.findViewById(R.id.titleDataList);
-//        TextView description = layout_list.findViewById(R.id.descriptionList);
-//        title.setText(note.getTitle());
-//        titleDate.setText(note.getDate());
-//        description.setText(note.getDescription());
-//        layout_list.setOnClickListener(v-> listItemOnClick(note, index));
-//        layout_list.setOnLongClickListener(v->{
-
-//        });
-//        layoutView.addView(layout_list);
-//    }
-//
-
-//
-    private void setFragment(NotesClass note, int index, int id) {
-        ShowFragNote showFragNote = ShowFragNote.newInstance(note,index);
+    private void setFragment(NotesData note, int index, int id) {
+        ShowFragNote showFragNote = new ShowFragNote();//.newInstance(note,index);
+        Utils.title = note.getTitle();
+        Utils.description = note.getDescription();
+        Utils.index = index;
         FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(id, showFragNote);
@@ -156,7 +119,7 @@ public class NotesFragmentListView extends Fragment  {
         if (!Utils.isLandscape(getResources())) transaction.addToBackStack("");
         transaction.commit();
     }
-//
+
 //    @Override
 //    public void onStop() {
 //        super.onStop();
