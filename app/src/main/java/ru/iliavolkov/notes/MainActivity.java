@@ -131,6 +131,9 @@ public class MainActivity extends AppCompatActivity {
     private void initAndPressFloatingBtn() {
         floatingBtn = findViewById(R.id.floating_action_button);
         floatingBtn.setOnClickListener(v->{
+            Utils.title = null;
+            Utils.description = null;
+            Utils.index = 0;
             activityStr = "note";
             floatingBtn.setVisibility(View.GONE);
             floatingBtnBool = true;

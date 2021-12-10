@@ -20,6 +20,7 @@ public class AboutFragment extends Fragment {
     @Override
     public void onStop() {
         MainActivity.activityStr = "list";
+        MainActivity.floatingBtn.setVisibility(View.VISIBLE);
         super.onStop();
     }
 }
