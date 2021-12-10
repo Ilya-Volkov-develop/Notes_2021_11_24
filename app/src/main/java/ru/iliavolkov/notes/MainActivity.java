@@ -155,13 +155,13 @@ public class MainActivity extends AppCompatActivity {
             Glide.with(this).load(selectedImage).into(icon);
         }
     }
-
-    @Override
-    protected void onStop() {
-        floatingBtn.setVisibility(View.VISIBLE);
-        super.onStop();
-    }
-
+//
+//    @Override
+//    protected void onStop() {
+//        floatingBtn.setVisibility(View.VISIBLE);
+//        super.onStop();
+//    }
+//
     @Override
     public boolean dispatchTouchEvent(@NonNull MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -179,7 +179,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return super.dispatchTouchEvent(event);
     }
-
+//
     @Override
     public void onBackPressed() {
         if (!Utils.isLandscape(getResources()) && activityStr.equals("list")) {

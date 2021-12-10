@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -84,6 +85,7 @@ public class NotesFragmentListView extends Fragment  {
         String json = prefs.getString("arrNotes", null);
         if (json != null) {
             Type type = new TypeToken<ArrayList<NotesData>>() {}.getType();
+
             return new Gson().fromJson(json, type);
         } else return new ArrayList<>();
     }
