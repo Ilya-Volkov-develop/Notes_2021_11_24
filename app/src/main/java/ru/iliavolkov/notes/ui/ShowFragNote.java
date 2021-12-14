@@ -116,7 +116,7 @@ public class ShowFragNote extends Fragment {
 
 
 //
-
+ //Сохранение данных
     private void saveNote() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
