@@ -41,25 +41,18 @@ public class MainActivity extends AppCompatActivity {
     private Toast backToast;
     private CircleImageView icon;
     private EditText name;
+    private Navigation navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        navigation = new Navigation(getSupportFragmentManager());
         initToolbar();
-        addFragment(new NotesFragmentListView());
+        getNavigation().setFragment(new NotesFragmentListView(),R.id.fragment_container,false, getResources());
         loadIconAndName();
         initAndPressFloatingBtn();
     }
-
-    private void addFragment(Fragment notesFragmentListView) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.fragment_container, notesFragmentListView)
-                .commit();
-    }
-
 
     //Инициализачия toolbar
     private void initToolbar() {
@@ -120,11 +113,7 @@ public class MainActivity extends AppCompatActivity {
     //Открытие франмента "О программе"
     private void openAboutFragment() {
         activityStr = "about";
-        getSupportFragmentManager()
-                .beginTransaction()
-                .addToBackStack("")
-                .replace(R.id.fragment_container, new AboutFragment())
-                .commit();
+        getNavigation().setFragment(new AboutFragment(),R.id.fragment_container,true,getResources());
     }
 
     //Игициализация и обработка нажатия floatingBtn
@@ -137,12 +126,13 @@ public class MainActivity extends AppCompatActivity {
             activityStr = "note";
             floatingBtn.setVisibility(View.GONE);
             floatingBtnBool = true;
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new ShowFragNote()) //.newInstance(new NotesClass(null,null,null), ShowFragNote.indexGet)
-                    .addToBackStack("")
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit();
+            getNavigation().setFragment(new ShowFragNote(),R.id.fragment_container,true,getResources());
+//            getSupportFragmentManager()
+//                    .beginTransaction()
+//                    .replace(R.id.fragment_container, new ShowFragNote()) //.newInstance(new NotesClass(null,null,null), ShowFragNote.indexGet)
+//                    .addToBackStack("")
+//                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                    .commit();
         });
     }
 
@@ -178,6 +168,10 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent(event);
+    }
+
+    public Navigation getNavigation(){
+        return navigation;
     }
 
     @Override
