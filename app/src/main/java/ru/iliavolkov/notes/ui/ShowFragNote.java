@@ -46,6 +46,7 @@ public class ShowFragNote extends Fragment {
         titleGet = Utils.title;
         descriptionGet = Utils.description;
         indexGet = Utils.index;
+
     }
 
     @Override
@@ -114,6 +115,7 @@ public class ShowFragNote extends Fragment {
 
 
 //
+
     private void saveNote() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         SharedPreferences.Editor editor = prefs.edit();
@@ -168,7 +170,7 @@ public class ShowFragNote extends Fragment {
             description.setText(null);
         }
     }
-//
+
     @Override
     public void onStop() {
         if (!Utils.isLandscape(getResources())){
