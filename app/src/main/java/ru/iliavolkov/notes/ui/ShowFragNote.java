@@ -42,7 +42,7 @@ public class ShowFragNote extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        saveNote();
+//        saveNote();
         titleGet = Utils.title;
         descriptionGet = Utils.description;
         indexGet = Utils.index;
@@ -161,6 +161,7 @@ public class ShowFragNote extends Fragment {
                 }
             }
 
+            MainActivity.floatingBtnBool = false;
             MainActivity.pressButtonKey = false;
             json = gson.toJson(arrNotes);
             editor.putString("arrNotes", json);

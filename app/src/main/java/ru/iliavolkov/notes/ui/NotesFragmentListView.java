@@ -24,6 +24,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 import ru.iliavolkov.notes.MainActivity;
+import ru.iliavolkov.notes.Navigation;
 import ru.iliavolkov.notes.R;
 import ru.iliavolkov.notes.Utils;
 import ru.iliavolkov.notes.data.NotesData;
@@ -33,8 +34,10 @@ public class NotesFragmentListView extends Fragment  {
     private ArrayList<NotesData> arrNotes;
     private View view;
     private RecyclerView recyclerView;
+    private Navigation navigation;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        navigation = new Navigation(requireActivity().getSupportFragmentManager());
         view = inflater.inflate(R.layout.fragment_notes, container, false);
         recyclerView = view.findViewById(R.id.recycle_view_lines);
         arrNotes = getArrNotes();
@@ -110,16 +113,24 @@ public class NotesFragmentListView extends Fragment  {
     }
 
     private void setFragment(NotesData note, int index, int id) {
-        ShowFragNote showFragNote = new ShowFragNote();//.newInstance(note,index);
         Utils.title = note.getTitle();
         Utils.description = note.getDescription();
         Utils.index = index;
-        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(id, showFragNote);
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-        if (!Utils.isLandscape(getResources())) transaction.addToBackStack("");
-        transaction.commit();
+        getNavigation().setFragment(new ShowFragNote(),id, false, getResources());
+//        ShowFragNote showFragNote = new ShowFragNote();//.newInstance(note,index);
+//        Utils.title = note.getTitle();
+//        Utils.description = note.getDescription();
+//        Utils.index = index;
+//        FragmentManager fragmentManager = requireActivity().getSupportFragmentManager();
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction.replace(id, showFragNote);
+//        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+//        if (!Utils.isLandscape(getResources())) transaction.addToBackStack("");
+//        transaction.commit();
+    }
+
+    public Navigation getNavigation(){
+        return navigation;
     }
 
 //    @Override
