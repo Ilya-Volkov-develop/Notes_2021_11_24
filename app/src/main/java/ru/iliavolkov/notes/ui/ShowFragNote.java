@@ -37,6 +37,7 @@ public class ShowFragNote extends Fragment {
     private String titleGet = null;
     private String descriptionGet = null;
 
+
     public ShowFragNote() {}
 
     @Override
